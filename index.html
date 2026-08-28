@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>henrique breitschaft — arquiteto & urbanista</title>
+<link rel="icon" type="image/svg+xml" href="IMAGES/LOGO PRETO S FUNDO.svg">
+<style>
+
+  /* ============================================================
+     TOKENS DA MARCA — cores extraídas do manual que você enviou.
+     Se algum tom não bater 100% com o oficial, é só me falar o
+     hex certo que eu atualizo aqui.
+     ============================================================ */
+  :root{
+    --off-white:   #F5F1E8; /* fundo de páginas principais */
+    --sage:        #8A9887; /* institucionais */
+    --orange:      #F2803C; /* interiores */
+    --terracota:   #C25B52; /* arquitetônico */
+    --mostarda:    #D9B04B; /* projeto legal */
+    --azul:        #3E7A96; /* comercial */
+    --preto:       #0A0A0A; /* base */
+
+    --serif: "Times New Roman", Times, "Georgia", serif;
+    --sans: "Aileron", "Helvetica Neue", Arial, sans-serif;
+
+    --bg: var(--off-white);
+    --fg: var(--preto);
+    --line: rgba(10,10,10,0.14);
+    --transition: 500ms cubic-bezier(.4,0,.2,1);
+  }
+
+  [data-theme="dark"]{
+    --bg: var(--preto);
+    --fg: var(--off-white);
+    --line: rgba(245,241,232,0.16);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    transition: background var(--transition), color var(--transition);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ transition-duration: 1ms !important; animation-duration: 1ms !important; }
+  }
+
+  .wrap{
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 6vw;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding: 11px 6vw;
+    background: color-mix(in srgb, var(--bg) 60%, transparent);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--transition), background var(--transition), opacity 500ms ease, transform 500ms ease;
+  }
+  header.scrolled{ border-bottom: 1px solid var(--line); }
+  header.hidden{
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+  /* CABEÇALHO REDUZIDO NOS PROJETOS */
+header.compact{
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+
+header.compact .brand img{
+ width: 100px;
+}
+
+header.compact .header-name{
+  font-size: 18px;
+}
+
+  .brand{
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+  }
+  .brand span{ display:block; }
+  .brand img{
+  width: 100px;
+  height: auto;
+}
+
+.header-name{
+  font-size: 18px;
+}
+
+  nav{ display:flex; gap: 32px; }
+  nav a{
+    color: var(--fg);
+    text-decoration:none;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.72;
+    transition: opacity 200ms;
+  }
+  nav a:hover, nav a:focus-visible{ opacity: 1; }
+
+  @media (max-width: 640px){
+    nav{ gap: 18px; }
+    nav a{ font-size: 11px; }
+  }
+
+  /* ---------- HERO / INTRO ---------- */
+  .hero{
+  padding: 32vh 6vw 20vh;
+  background-image: url("IMAGES/CAPA.png");
+background-size: cover;
+background-position: center 60%;
+  margin-left: calc(50% - 50vw);
+margin-right: calc(50% - 50vw);
+  }
+ 
+  .hero p{
+    font-family: var(--serif);
+    font-size: clamp(28px, 5vw, 54px);
+    line-height: 1.25;
+    max-width: 30ch;
+    margin: 0;
+    letter-spacing: -0.01em;
+    padding-top: 300px;
+  }
+  .frase-intencao{
+  color: #F6F3ED;
+}
+  .hero .eyebrow{
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin: 0 0 28px;
+  }
+
+  /* ---------- SOBRE ---------- */
+  .sobre{
+  min-height: 100vh;
+  padding: 0 6vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+.sobre .label,
+.sobre p{
+  opacity: 0;
+  transform: translateY(35px);
+  transition:
+    opacity 1000ms cubic-bezier(.4,0,.2,1),
+    transform 1000ms cubic-bezier(.4,0,.2,1);
+}
+
+.sobre.show-content .label,
+.sobre.show-content p{
+  opacity: 1;
+  transform: translateY(0);
+}
+  .sobre .label{
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .sobre p{
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.7;
+  max-width: 72ch;
+  margin: 0;
+  text-align: justify;
+}
+  @media (max-width: 780px){
+    .sobre{ grid-template-columns: 1fr; gap: 20px; }
+  }
+
+  /* ---------- PORTFÓLIO ---------- */
+  .portfolio{ padding: 6vh 0 10vh; }
+  .portfolio .section-head{
+    padding-bottom: 10vh;
+    padding-top: 8vh;
+  }
+  .section-head .label{
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  .project{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 22vh;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 900ms ease, transform 900ms ease;
+  }
+  .project.in-view{ opacity: 1; transform: translateY(0); }
+
+  .project.align-left  .frame{ margin-right: auto; }
+  .project.align-right .frame{ margin-left: auto; }
+  .project.align-center .frame{ margin: 0 auto; }
+
+  .frame{
+    width: 82%;
+    aspect-ratio: var(--ratio, 4/3);
+    position: relative;
+    overflow: hidden;
+    background: var(--mosaic-bg, var(--sage));
+  }
+  .frame .mosaic{
+    position:absolute; inset:0;
+    display:grid;
+  }
+  .frame .mosaic div{ background: var(--c); }
+
+  .frame .mosaic img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.project.square-pair .frame{
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  background: var(--bg);
+}
+
+.project.square-pair .mosaic{
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 16px;
+}
+/* DUAS IMAGENS HORIZONTAIS EMPILHADAS */
+.project.horizontal-stack .frame{
+  width: 100%;
+  aspect-ratio: 16 / 18;
+  background: var(--bg);
+}
+
+.project.horizontal-stack .mosaic{
+  grid-template-columns: 1fr !important;
+  grid-template-rows: repeat(2, 1fr);
+  gap: 16px;
+}
+
+  .project.tall .frame{ width: 46%; }
+  .project.wide .frame{ width: 100%; }
+
+  @media (max-width: 780px){
+    .frame, .project.tall .frame, .project.wide .frame{ width: 100%; }
+  }
+
+  .caption{
+    margin-top: 18px;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    display:flex;
+    gap: 10px;
+    opacity: 0.75;
+  }
+  
+  .caption .name{ font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+  .project-intro{
+  margin-bottom: 40px;
+}
+
+.project-concept{
+  
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+/* CORES DOS CONCEITOS DOS PROJETOS */
+
+.project:nth-child(1) .project-concept{
+  color: var(--azul);
+}
+
+.project:nth-child(2) .project-concept{
+  color: var(--terracota);
+}
+
+.project:nth-child(3) .project-concept{
+  color: var(--orange);
+}
+
+.project:nth-child(4) .project-concept{
+  color: var(--sage);
+}
+.project-text{
+  width: 50%;
+  max-width: none;
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 0 0 12px;
+  text-align: justify;
+}
+
+.project-manifesto{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 4vh 0 10vh;
+}
+
+.project-manifesto p{
+  font-family: var(--sans);
+  font-size: clamp(16px, 1.6vw, 20px);
+  line-height: 1.5;
+  margin: 0;
+}
+.project-manifesto .existe{
+  color: var(--azul);
+}
+
+.project-manifesto .habitar{
+  color: var(--terracota);
+}
+
+.project-manifesto .detalhe{
+  color: var(--orange);
+}
+
+.project-manifesto .paisagem{
+  color: var(--sage);
+}
+
+  /* ---------- RODAPÉ ---------- */
+  footer{
+    padding: 10vh 0 6vh;
+  }
+  .footer-top{
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding-bottom: 8vh;
+  }
+  .footer-top .col:last-child{
+  padding-top: 28px;
+}
+  .footer-top .col .label{
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 14px;
+  }
+  .footer-top .col a, .footer-top .col p{
+    display:block;
+    color: var(--fg);
+    text-decoration:none;
+    font-size: 15px;
+    margin: 0 0 6px;
+    opacity: 0.85;
+  }
+  .footer-top .col a:hover{ opacity: 1; }
+
+  .footer-bottom{
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-top: 4vh;
+    border-top: 1px solid color-mix(in srgb, var(--fg) 7%, transparent);
+    font-size: 12px;
+    opacity: 0.6;
+  }
+
+  .invert-btn{
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: background 200ms, color 200ms;
+  }
+  .invert-btn:hover{
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .signoff{
+    font-family: var(--serif);
+    font-size: 13px;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="brand" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <img id="siteLogo" src="IMAGES/LOGO OFF S FUNDO.svg" alt="HNRQ ARQT">
+</div>
+
+<div class="header-name">Henrique Breitschaft • Arquiteto & Urbanista</div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============================================================
+       HERO — TEXTO PLACEHOLDER. Me manda a frase definitiva
+       que eu troco aqui (2-3 linhas, no espírito de
+       "Forma segue intenção").
+       ============================================================ -->
+  <section class="hero">
+  <p class="frase-intencao">Arquitetura sem receita,<br>forma segue intenção.</p>
+</section>
+
+  <!-- ============================================================
+      
+       ============================================================ -->
+  <section class="sobre" id="sobre">
+    <div class="label">Olhar</div>
+     <p>Cada projeto começa pela leitura atenta do que já existe,
+       desde o lugar, a paisagem, as pessoas e suas formas de habitar. Não há respostas prontas, mas possibilidades a serem descobertas em cada 
+       contexto. Projetar é observar, interpretar e, sobretudo, saber enxergar.</p>
+  </section>
+
+  <!-- ============================================================
+       PORTFÓLIO — mosaicos coloridos no lugar das imagens reais,
+       usando a paleta da marca. Quando tiver os renders/fotos,
+       é só me mandar que eu troco cada bloco pela imagem real,
+       sem mexer no resto do layout.
+       ============================================================ -->
+  <section class="portfolio" id="projetos">
+  
+    <div id="projectList"></div>
+    <div class="project-manifesto">
+  <p>
+    <span class="existe">Existe</span>
+    <span class="habitar">habitar</span> no
+    <span class="detalhe">detalhe</span> e na
+    <span class="paisagem">paisagem.</span>
+  </p>
+</div>
+  </section>
+
+</div>
+
+<footer id="contato">
+  <div class="wrap">
+
+    <div class="footer-top">
+
+      <div class="col">
+        <div class="label">Projetos · Colaborações · Orçamentos</div>
+        <a href="mailto:projetos.henriquearquitetura@gmail.com">projetos.henriquearquitetura@gmail.com</a>
+      </div>
+
+      <div class="col">
+        <a href="https://instagram.com/hnrq.arqt" target="_blank" rel="noopener">@hnrq.arqt</a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+  
+      <button class="invert-btn" id="invertBtn">Modo Dia</button>
+    </div>
+
+  </div>
+</footer>
+
+<script>
+  /* ============================================================
+     DADOS DOS PROJETOS
+     Pra adicionar um projeto novo, é só copiar um bloco do array
+     abaixo e trocar as infos. "colors" define as cores do mosaico
+     (troque por imagens reais depois). "ratio" controla a proporção
+     do quadro: use algo como "4/3" (horizontal), "3/4" (vertical),
+     "16/9" (panorâmica).
+     ============================================================ */
+  const projects = [
+  {
+  concept: "Existe",
+  name: "Solar do Barão",
+  location: "Jundiaí, SP",
+  year: "2025",
+  text: "Projetar não pressupõe começar do zero. O que antecede a arquitetura também pode orientar suas decisões, revelando permanências, transformações e novas possibilidades. O projeto parte dessa leitura para construir relações entre o que já estava ali e aquilo que passa a existir.",
+  ratio: "2/1",
+  size: "square-pair",
+  align: "center",
+  images: ["IMAGES/EXISTE1.png", "IMAGES/EXISTE2.png"]
+},
+  {
+    concept: "Habitar",
+    name: "Casa Louro",
+    location: "Jundiaí, SP",
+    year: "2026",
+    text: "A arquitetura se constrói a partir das formas de viver. Usos, percursos e relações orientam espaços que não apenas respondem ao cotidiano, mas permitem que ele se transforme. Habitar é dar sentido ao espaço através da experiência de quem o ocupa.",
+    ratio: "16/18",
+    size: "horizontal-stack",
+    align: "left",
+    images: ["IMAGES/HABITAR1.png", "IMAGES/HABITAR PLANTA.jpg"]
+  },
+  {
+    concept: "Detalhe",
+    name: "Casa de Artista",
+    location: "Itatiba, SP",
+    year: "2023",
+    text: "No interior, a arquitetura se aproxima do corpo e do cotidiano. Materialidade, luz, mobiliário e objetos passam a construir o espaço em conjunto, fazendo do detalhe parte da experiência de habitar.",
+    ratio: "2/1",
+    size: "square-pair",
+    align: "left",
+    images: ["IMAGES/DETALHE1.png", "IMAGES/DETALHE2.png"]
+  },
+  {
+    concept: "Paisagem",
+    name: "Chalé Pau-Ferro",
+    location: "Itatiba, SP",
+    year: "2025",
+    text: "A paisagem não aparece como cenário, mas como parte do projeto. Implantação, aberturas e materialidade procuram aproximar arquitetura e lugar, fazendo com que o edifício pertença ao contexto que ocupa.",
+   ratio: "16/18",
+    size: "horizontal-stack",
+    align: "left",
+    images: ["IMAGES/PAISAGEM.png", "IMAGES/PAISAGEM 02.jpg"]
+  }
+];
+  const list = document.getElementById("projectList");
+
+  projects.forEach((p, i) => {
+    const el = document.createElement("div");
+    el.className = `project ${p.size} align-${p.align}`;
+    el.style.setProperty("--ratio", p.ratio);
+
+    const mosaicDivs = p.images
+  ? p.images.map(img => `<img src="${img}" alt="">`).join("")
+  : p.colors.map(c => `<div style="--c:var(${c})"></div>`).join("");
+
+const cols = p.images ? p.images.length : p.colors.length;
+
+   el.innerHTML = `
+  <div class="project-intro">
+    <div class="project-concept">${p.concept}</div>
+    <p class="project-text">${p.text}</p>
+  </div>
+  
+
+  <div class="frame">
+    <div class="mosaic" style="grid-template-columns: repeat(${cols}, 1fr);">
+      ${mosaicDivs}
+    </div>
+  </div>
+
+  <div class="caption">
+    <span class="name">${p.name}</span>
+    <span>${p.location} — ${p.year}</span>
+  </div>
+`;
+list.appendChild(el);
+});
+  /* ============================================================
+     TEMA INVERTIDO — detecta a preferência do sistema e mostra
+     o oposto no primeiro acesso. Depois disso, respeita a escolha
+     manual do visitante (botão "Inverter") salva localmente.
+     ============================================================ */
+  const root = document.documentElement;
+  const stored = localStorage.getItem("hnrq-theme");
+  function applyTheme(theme){
+  root.setAttribute("data-theme", theme);
+
+  const logo = document.getElementById("siteLogo");
+  const button = document.getElementById("invertBtn");
+
+  if (theme === "dark"){
+    logo.src = "IMAGES/LOGO OFF S FUNDO.svg";
+    button.textContent = "Modo Dia";
+  } else {
+    logo.src = "IMAGES/LOGO PRETO S FUNDO.svg";
+    button.textContent = "Modo Noite";
+  }
+}
+
+  
+
+  if (stored){
+    applyTheme(stored);
+  } else {
+    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    applyTheme(systemPrefersDark ? "light" : "dark");
+  }
+
+  document.getElementById("invertBtn").addEventListener("click", () => {
+    const current = root.getAttribute("data-theme") || "light";
+    const next = current === "dark" ? "light" : "dark";
+    applyTheme(next);
+    localStorage.setItem("hnrq-theme", next);
+  });
+
+  /* ---------- header com linha ao rolar ---------- */
+  const header = document.getElementById("siteHeader");
+  window.addEventListener("scroll", () => {
+    header.classList.toggle("scrolled", window.scrollY > 20);
+  });
+  /* ---------- cabeçalho compacto a partir dos projetos ---------- */
+const projetosSection = document.getElementById("projetos");
+
+window.addEventListener("scroll", () => {
+  const inicioProjetos = projetosSection.offsetTop;
+
+  if (window.scrollY >= inicioProjetos - 100) {
+    header.classList.add("compact");
+  } else {
+    header.classList.remove("compact");
+  }
+});
+  const sobreSection = document.getElementById("sobre");
+
+const sobreObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    header.classList.toggle("hidden", entry.isIntersecting);
+
+    if (entry.isIntersecting) {
+      sobreSection.classList.add("show-content");
+    } else {
+      sobreSection.classList.remove("show-content");
+    }
+  });
+}, {
+  threshold: 0.05
+});
+sobreObserver.observe(sobreSection);
+
+  /* ---------- reveal dos projetos ao entrar na viewport ---------- */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        entry.target.classList.add("in-view");
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll(".project").forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
