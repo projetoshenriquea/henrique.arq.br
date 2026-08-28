@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" id="themeColor" content="#F5F1E8">
 <title>henrique breitschaft — arquiteto & urbanista</title>
 <link rel="icon" type="image/svg+xml" href="IMAGES/LOGO PRETO S FUNDO.svg">
 <style>
@@ -41,6 +42,7 @@
 
   body{
     margin:0;
+    padding-top: env(safe-area-inset-top);
     background: var(--bg);
     color: var(--fg);
     font-family: var(--sans);
@@ -80,6 +82,12 @@
   transform: translateY(-100%);
   pointer-events: none;
 }
+header.landscape-hidden{
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
   /* CABEÇALHO REDUZIDO NOS PROJETOS */
 header.compact{
   padding-top: 11px;
@@ -92,6 +100,31 @@ header.compact .brand img{
 
 header.compact .header-name{
   font-size: 18px;
+   margin-left: auto;
+  text-align: right;
+}
+.header-name span{
+  display: inline;
+}
+
+@media (max-width: 780px){
+  header{
+    gap: 18px;
+  }
+
+  .header-name{
+    flex: 1;
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  .header-name span{
+    display: block;
+  }
+
+  .brand img{
+    width: 100px;
+  }
 }
 
   .brand{
@@ -125,15 +158,25 @@ header.compact .header-name{
   }
   nav a:hover, nav a:focus-visible{ opacity: 1; }
 
-  @media (max-width: 640px){
-    nav{ gap: 18px; }
-    nav a{ font-size: 11px; }
+ @media (max-width: 640px){
+  nav{ gap: 18px; }
+  nav a{ font-size: 11px; }
+
+  .header-name{
+    font-size: 16px;
+    line-height: 1.2;
+    text-align: right;
   }
+
+  .header-name span{
+    display: block;
+  }
+}
 
   /* ---------- HERO / INTRO ---------- */
   .hero{
   padding: 32vh 6vw 20vh;
-  background-image: url("IMAGES/capa.png");
+  background-image: url("IMAGES/SOFACAPA.png");
 background-size: cover;
 background-position: center 60%;
   margin-left: calc(50% - 50vw);
@@ -141,7 +184,7 @@ margin-right: calc(50% - 50vw);
   }
  
   .hero p{
-    font-family: var(--serif);
+    font-family: var(--sans);
     font-size: clamp(28px, 5vw, 54px);
     line-height: 1.25;
     max-width: 30ch;
@@ -149,6 +192,7 @@ margin-right: calc(50% - 50vw);
     letter-spacing: -0.01em;
     padding-top: 300px;
   }
+  
   .frase-intencao{
   color: #F6F3ED;
 }
@@ -232,7 +276,6 @@ margin-right: calc(50% - 50vw);
 
   .frame{
     width: 82%;
-    aspect-ratio: var(--ratio, 4/3);
     position: relative;
     overflow: hidden;
     background: var(--mosaic-bg, var(--sage));
@@ -246,9 +289,10 @@ margin-right: calc(50% - 50vw);
   .frame .mosaic img{
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
 }
+
 .project.square-pair .frame{
   width: 100%;
   aspect-ratio: 2 / 1;
@@ -327,6 +371,12 @@ margin-right: calc(50% - 50vw);
   line-height: 1.7;
   margin: 0 0 12px;
   text-align: justify;
+}
+
+@media (max-width: 780px){
+  .project-text{
+    width: 100%;
+  }
 }
 
 .project-manifesto{
@@ -432,7 +482,10 @@ margin-right: calc(50% - 50vw);
   <img id="siteLogo" src="IMAGES/LOGO OFF S FUNDO.svg" alt="HNRQ ARQT">
 </div>
 
-<div class="header-name">Henrique Breitschaft • Arquiteto & Urbanista</div>
+<div class="header-name">
+  <span>Henrique Breitschaft</span>
+  <span>Arquiteto & Urbanista</span>
+</div>
 </header>
 
 <div class="wrap">
@@ -598,6 +651,8 @@ list.appendChild(el);
   const stored = localStorage.getItem("hnrq-theme");
   function applyTheme(theme){
   root.setAttribute("data-theme", theme);
+  const themeColor = document.getElementById("themeColor");
+themeColor.setAttribute("content", theme === "dark" ? "#0A0A0A" : "#F5F1E8");
 
   const logo = document.getElementById("siteLogo");
   const button = document.getElementById("invertBtn");
@@ -613,12 +668,11 @@ list.appendChild(el);
 
   
 
-  if (stored){
-    applyTheme(stored);
-  } else {
-    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    applyTheme(systemPrefersDark ? "light" : "dark");
-  }
+ if (stored){
+  applyTheme(stored);
+} else {
+  applyTheme("light");
+}
 
   document.getElementById("invertBtn").addEventListener("click", () => {
     const current = root.getAttribute("data-theme") || "light";
@@ -634,6 +688,22 @@ list.appendChild(el);
   });
   /* ---------- cabeçalho compacto a partir dos projetos ---------- */
 const projetosSection = document.getElementById("projetos");
+function updateLandscapeHeader(){
+  const isMobileLandscape =
+    window.matchMedia("(max-height: 500px) and (orientation: landscape)").matches;
+
+  const chegouNosProjetos =
+    window.scrollY >= projetosSection.offsetTop - 100;
+
+  header.classList.toggle(
+    "landscape-hidden",
+    isMobileLandscape && chegouNosProjetos
+  );
+}
+
+window.addEventListener("scroll", updateLandscapeHeader);
+window.addEventListener("resize", updateLandscapeHeader);
+updateLandscapeHeader();
 
 window.addEventListener("scroll", () => {
   const inicioProjetos = projetosSection.offsetTop;
@@ -657,7 +727,7 @@ const sobreObserver = new IntersectionObserver((entries) => {
     }
   });
 }, {
-  threshold: 0.05
+  threshold: 0.35
 });
 sobreObserver.observe(sobreSection);
 
