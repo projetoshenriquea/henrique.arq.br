@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" id="themeColor" content="#F5F1E8">
 <title>henrique breitschaft — arquiteto & urbanista</title>
-<link rel="icon" type="image/svg+xml" href="IMAGES/LOGO PRETO S FUNDO.svg">
+<link id="siteFavicon" rel="icon" type="image/svg+xml" href="IMAGES/logo_pequeno_fundo.0.letra.preta.svg">
 <style>
 
   /* ============================================================
@@ -145,8 +145,55 @@ header.compact .header-name{
 .header-name{
   font-size: 18px;
 }
+.portfolio-link {
+  color: var(--fg);
+  text-decoration: none;
+  display: block;
+  text-align: right;
+  position: relative;
+  cursor: pointer;
+}
 
-  nav{ display:flex; gap: 32px; }
+.header-original,
+.header-hover {
+  transition:
+    opacity 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.header-original {
+  display: block;
+}
+
+
+.header-original {
+  white-space: nowrap;
+}
+
+.separator {
+  display: inline;
+  margin: 0 5px;
+}
+
+
+.header-hover {
+  display: block;
+  opacity: 0;
+  position: absolute;
+  inset: 0;
+  white-space: nowrap;
+}
+
+.portfolio-link:hover .header-original,
+.portfolio-link:focus-visible .header-original {
+  opacity: 0;
+}
+
+.portfolio-link:hover .header-hover,
+.portfolio-link:focus-visible .header-hover {
+  opacity: 1;
+}
+
+nav{ display:flex; gap: 32px; }
   nav a{
     color: var(--fg);
     text-decoration:none;
@@ -168,9 +215,13 @@ header.compact .header-name{
     text-align: right;
   }
 
-  .header-name span{
-    display: block;
-  }
+  .header-name .header-original {
+  display: block;
+}
+
+.header-name .header-hover {
+  display: block;
+}
 }
 
   /* ---------- HERO / INTRO ---------- */
@@ -503,10 +554,14 @@ margin-right: calc(50% - 50vw);
   <img id="siteLogo" src="IMAGES/LOGO OFF S FUNDO.svg" alt="HNRQ ARQT">
 </div>
 
-<div class="header-name">
-  <span>Henrique Breitschaft</span>
-  <span>Arquiteto & Urbanista</span>
-</div>
+<a class="header-name portfolio-link"
+   href="https://www.behance.net/gallery/252278361/Portifolio-Criativo"
+   target="_blank"
+   rel="noopener"
+   aria-label="Abrir portfólio de projetos no Behance">
+<span class="header-original">Henrique Breitschaft <span class="separator">·</span> Arquiteto &amp; Urbanista</span>
+  <span class="header-hover">Portfólio de projetos ↗</span>
+</a>
 </header>
 
 <div class="wrap">
@@ -562,7 +617,7 @@ margin-right: calc(50% - 50vw);
       </div>
 
       <div class="col">
-        <a href="https://instagram.com/hnrq.arqt" target="_blank" rel="noopener">@hnrq.arqt</a>
+        <a href="https://instagram.com/hnrq.arq" target="_blank" rel="noopener">@hnrq.arq</a>
       </div>
 
     </div>
@@ -679,12 +734,14 @@ themeColor.setAttribute("content", theme === "dark" ? "#0A0A0A" : "#F5F1E8");
   const button = document.getElementById("invertBtn");
 
   if (theme === "dark"){
-    logo.src = "IMAGES/LOGO OFF S FUNDO.svg";
-    button.textContent = "Modo Dia";
-  } else {
-    logo.src = "IMAGES/LOGO PRETO S FUNDO.svg";
-    button.textContent = "Modo Noite";
-  }
+  logo.src = "IMAGES/logo_pequeno_fundo.0.letra.branco.svg";
+  document.getElementById("siteFavicon").href = "IMAGES/logo_pequeno_fundo.0.letra.branco.svg";
+  button.textContent = "Modo Dia";
+} else {
+  logo.src = "IMAGES/logo_pequeno_fundo.0.letra.preta.svg";
+  document.getElementById("siteFavicon").href = "IMAGES/logo_pequeno_fundo.0.letra.preta.svg";
+  button.textContent = "Modo Noite";
+}
 }
 
   
